@@ -41,46 +41,69 @@ function readProducts() {
 
 }
 
-function buyProduct() {
-    connection.connect(function(err, res) {
-        if (err) throw err;
+function buyProduct(res) {
 
         inquirer.prompt({
 
             name: "item",
             type: "prompt",
-            message: "What is the Id of the item you would like to purchase?"
-            // validate: function(value) {
-            //     if (isNaN(value) == false && parseInt(value) <= res.length && parseInt(value) > 0) {
-            //         return true;
-            //     } else {
-            //         return false;
-            //     }
-            // }
+            message: "What is the Id of the item you would like to purchase?",
+            validate: function(value, res) {
+            	for (var i = 0; i < res.length; i++) {
+                if (isNaN(value) == false && parseInt(value) <= value.length && parseInt(value) > 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
 
         }, {
             name: "quantity",
             type: "prompt",
-            message: "How many would you like?"
-            // validate: function(value) {
-            //     if (isNaN(value)) {
-            //         return false;
-            //     } else {
-            //         return true;
-            //     }
-            // }
+            message: "How many would you like?",
+            validate: function(value) {
+                if (isNaN(value)) {
+                    return false;
+                } else {
+                    return true;
+                }
+     }
 
         }).then(function(answer) {
+            var uniqueId = (answer.id) - 1;
+            var quantityNum = parseInt(answer.stock_quantity);
+            var Total = parseFloat(((res[uniqueId].price) * quantityNum).toFixed(2));
+            if (res[uniqueId].stock_quantity >= quantityNum) {
+                connection.query("UPDATE Products SET ? WHERE ?", [
+                        { stock_quantity: (res[uniqueId].stock_quantity - quantityNum) },
+                        { ItemId: answer.id }
+                    ],
+                    function(err, res) {
+                        if (err) throw err;
+                        console.log("Yayyy!")
+                    });
 
-            var uniqueId;
-            for (var i = 0; i < res.length; i++) {
-                if (res[i].id === answer.item) {
-                    uniqueId = res[i];
-                }
+                connection.query("SELECT * FROM Departments", function(err, res) {
+                    if (err) throw err;
+                    var index;
+                    for (var i = 0; i < res.length; i++) {
+                        if (res[i].department_name === res[uniqueId].department_name) {
+                            index = i
+                        }
+                    }
+
+                    connection.query("UPDATE Departments SET ? WHERE ?", [
+                        { department_name: res[uniqueId].department_name }
+                    ], function(err, res) {
+                        if (err) throw err;
+                    });
+                });
+            } else {
+                console.log("Sorry");
             }
+            readProducts();
         })
 
-    })
 }
 
 
@@ -92,3 +115,23 @@ function buyProduct() {
 // 		console.log("Yep we have everything you need! Your Item was succesfully added.")
 // 	}
 
+///////////////////////////////////////////////////////////////////////////////////////
+          ///////////////////////////////////////////////////
+            //                             validate: function(res) {
+            //                                 for (var i = 0; i < res.length; i++) {
+            //                                     if (res[i].id) {
+            //                                         console.log("Yep we have everything you need! Your Item was succesfully added.");
+            //                                         return;
+            //                                     } else {
+            //                                         console.log("Sorry, we don't have that much inventory... Try again")
+            //                                     }
+            //                                 }
+
+            //                                 /////////////////////////////////////////////////////////
+
+            //                                 .then() var uniqueId;
+            //                                 for (var i = 0; i < res.length; i++) {
+            //                                     if (res[i].id === answer.item) {
+            //                                         uniqueId = res[i];
+            //                                     }
+            //                                 }
