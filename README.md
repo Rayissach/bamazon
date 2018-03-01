@@ -14,10 +14,10 @@ npm install cli-table
 ![Demonstration of my application Bamazon](assets/images/bamazon-demo.gif)
 
 # Built With
-Javascript - contains all of the logic
-Node - Server
-CLI - Table design
-SQL - Database
+* Javascript - contains all of the logic
+* Node - Server
+* CLI - Table design
+* SQL - Database
 
 
 # Authors
