@@ -11,7 +11,7 @@ npm install inquirer
 npm install cli-table
 
 # Demo
-![Demonstration of my application Bamazon](assets/images/bamazonDemo.gif)
+![Demonstration of my application Bamazon](assets/images/bamazon-demo.gif)
 
 # Built With
 Javascript - contains all of the logic
