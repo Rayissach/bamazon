@@ -1,0 +1,4 @@
+bamazon.js
+db.url=jdbc:mysql://localhost:3306/YOURDBNAME
+ db.username=USERNAME
+ db.password=PASSWORD
